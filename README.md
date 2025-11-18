@@ -97,11 +97,34 @@ class AdminPanelProvider extends PanelProvider
 }
 ```
 
+### What the plugin registers
+
 The plugin will:
 
 - Register the `ExceptionLogResource` under your chosen navigation group.
 - Register the `ExceptionStatsOverview` chart widget for your dashboard.
 - Register the CSS for the AI Solution modal.
+
+If you want to explicitly control which widgets appear on a given dashboard, you can also register the widget manually:
+
+```php
+use Arseno25\ExceptionLogger\ExceptionLoggerPlugin;
+use Arseno25\ExceptionLogger\Widgets\ExceptionStatsOverview;
+use Filament\Pages\Dashboard;
+use Filament\Panel;
+
+class AdminPanelProvider extends PanelProvider
+{
+    public function panel(Panel $panel): Panel
+    {
+        return $panel
+            // ...
+            ->widgets([
+                ExceptionStatsOverview::class,
+            ]);
+    }
+}
+```
 
 ---
 
