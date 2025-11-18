@@ -27,7 +27,7 @@ class DatabaseLoggerHandler extends AbstractProcessingHandler
             'msg' => $record->message,
             'lvl' => $record->level->name,
             'url' => Request::fullUrl(),
-            'ip'  => Request::ip(),
+            'ip' => Request::ip(),
         ];
 
         // Jika ada exception object, tambahkan file & line agar lebih spesifik
@@ -38,7 +38,7 @@ class DatabaseLoggerHandler extends AbstractProcessingHandler
         }
 
         // Buat Hash Unik
-        $signature = 'log_lock_' . md5(json_encode($signatureData));
+        $signature = 'log_lock_'.md5(json_encode($signatureData));
 
         // Jika log yang SAMA PERSIS sudah ada di cache (baru terjadi < 2 detik lalu), STOP disini.
         if (Cache::has($signature)) {
@@ -47,7 +47,6 @@ class DatabaseLoggerHandler extends AbstractProcessingHandler
 
         // Kunci signature ini selama 2 detik
         Cache::put($signature, true, now()->addSeconds(2));
-
 
         // ==================================================================
         // 2. PROSES DATA & SIMPAN
@@ -96,7 +95,7 @@ class DatabaseLoggerHandler extends AbstractProcessingHandler
 
         // Cache Key untuk Telegram berbeda (Throttling 5 menit) agar tidak spam notifikasi
         // Logika ini tetap dipertahankan terpisah dari Anti-Duplikat Database di atas.
-        $cacheKey = 'telegram_log_' . md5($record->message);
+        $cacheKey = 'telegram_log_'.md5($record->message);
         $throttleTime = Config::get('exception-logger.telegram.throttle_minutes', 5);
 
         if (Cache::has($cacheKey)) {
