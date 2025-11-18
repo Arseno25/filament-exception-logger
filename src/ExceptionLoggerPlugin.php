@@ -24,9 +24,6 @@ class ExceptionLoggerPlugin implements Plugin
             ])
             ->widgets([
                 ExceptionStatsOverview::class,
-            ])
-            ->assets([
-                Css::make('exception-logger-ai-solution', __DIR__ . '/../resources/dist/ai-solution.css'),
             ]);
     }
 

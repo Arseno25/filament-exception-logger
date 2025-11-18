@@ -45,7 +45,6 @@
 
 .exception-logger-ai-solution__content code {
     font-family: var(--filament-code-font-family, 'JetBrains Mono', ui-monospace, SFMono-Regular);
-    background-color: color-mix(in srgb, var(--filament-card-background-color, #f1f5f9) 90%, #e2e8f0);
     padding: 0.15rem 0.35rem;
     border-radius: 0.35rem;
     font-size: 0.85em;
@@ -153,7 +152,6 @@
     }
 
     .exception-logger-ai-solution__content code {
-        background-color: rgba(51, 65, 85, 0.8);
         color: rgba(248, 250, 252, 0.9);
     }
 
