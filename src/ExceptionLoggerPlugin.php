@@ -6,8 +6,6 @@ use Arseno25\ExceptionLogger\Resources\ExceptionLogResource;
 use Arseno25\ExceptionLogger\Widgets\ExceptionStatsOverview;
 use Filament\Contracts\Plugin;
 use Filament\Panel;
-use Filament\Support\Assets\Css;
-use Filament\Support\Facades\FilamentAsset;
 
 class ExceptionLoggerPlugin implements Plugin
 {
