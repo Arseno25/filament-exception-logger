@@ -59,7 +59,7 @@ class DatabaseLoggerHandler extends AbstractProcessingHandler
             return;
         }
 
-        $cacheKey = 'telegram_log_' . md5($record->message);
+        $cacheKey = 'telegram_log_'.md5($record->message);
         $throttleTime = Config::get('exception-logger.telegram.throttle_minutes', 5);
         $cacheKey = 'telegram_log_'.md5($record->message);
         $throttleTime = Config::get('filament-exception-logger.telegram.throttle_minutes', 5);
