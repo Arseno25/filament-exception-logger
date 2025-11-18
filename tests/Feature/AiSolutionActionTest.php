@@ -23,10 +23,9 @@ it('returns error view when AI is disabled or api key missing', function () {
         'user_agent' => 'phpunit',
     ]);
 
-    $page = new class($record) extends ViewExceptionLog {
-        public function __construct(public $testRecord)
-        {
-        }
+    $page = new class($record) extends ViewExceptionLog
+    {
+        public function __construct(public $testRecord) {}
 
         public function testHeaderActions()
         {
@@ -73,10 +72,9 @@ it('returns content when AI call succeeds', function () {
         'user_agent' => 'phpunit',
     ]);
 
-    $page = new class($record) extends ViewExceptionLog {
-        public function __construct(public $testRecord)
-        {
-        }
+    $page = new class($record) extends ViewExceptionLog
+    {
+        public function __construct(public $testRecord) {}
 
         public function testHeaderActions()
         {
@@ -96,5 +94,3 @@ it('returns content when AI call succeeds', function () {
         ->and($view->getData()['error'])->toBeNull()
         ->and($view->getData()['content'])->toBe('AI solution content');
 });
-
-

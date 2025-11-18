@@ -2,7 +2,6 @@
 
 use Arseno25\ExceptionLogger\ExceptionLoggerPlugin;
 use Arseno25\ExceptionLogger\Resources\ExceptionLogResource;
-use Filament\Panel;
 
 it('plugin can be instantiated', function () {
     $plugin = ExceptionLoggerPlugin::make();
@@ -14,5 +13,3 @@ it('plugin can be instantiated', function () {
 it('resource can be resolved', function () {
     expect(class_exists(ExceptionLogResource::class))->toBeTrue();
 });
-
-
