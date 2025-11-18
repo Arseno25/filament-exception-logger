@@ -11,6 +11,7 @@ use Spatie\LaravelPackageTools\PackageServiceProvider;
 class ExceptionLoggerServiceProvider extends PackageServiceProvider
 {
     public static string $name = 'exception-logger';
+
     public function configurePackage(Package $package): void
     {
         /*
@@ -32,7 +33,7 @@ class ExceptionLoggerServiceProvider extends PackageServiceProvider
         parent::boot();
 
         FilamentAsset::register([
-            Css::make('exception-logger-ai-solution', __DIR__ . '/../resources/dist/ai-solution.css'),
+            Css::make('exception-logger-ai-solution', __DIR__.'/../resources/dist/ai-solution.css'),
         ], package: 'arseno25/exception-logger');
     }
 }
