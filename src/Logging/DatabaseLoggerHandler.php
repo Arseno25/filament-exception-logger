@@ -2,20 +2,19 @@
 
 namespace Arseno25\ExceptionLogger\Logging;
 
-use Illuminate\Support\Facades\Cache;
-use Monolog\Handler\AbstractProcessingHandler;
-use Monolog\LogRecord;
 use Arseno25\ExceptionLogger\Models\ExceptionLog;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Request;
-use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Request;
+use Monolog\Handler\AbstractProcessingHandler;
+use Monolog\LogRecord;
 
 class DatabaseLoggerHandler extends AbstractProcessingHandler
 {
-
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     protected function write(LogRecord $record): void
     {
@@ -25,14 +24,14 @@ class DatabaseLoggerHandler extends AbstractProcessingHandler
         unset($context['exception']);
 
         $data = [
-            'level'      => $record->level->name,
-            'message'    => $record->message,
-            'context'    => $context,
-            'method'     => Request::method(),
-            'url'        => Request::fullUrl(),
-            'ip'         => Request::ip(),
+            'level' => $record->level->name,
+            'message' => $record->message,
+            'context' => $context,
+            'method' => Request::method(),
+            'url' => Request::fullUrl(),
+            'ip' => Request::ip(),
             'user_agent' => Request::userAgent(),
-            'user_id'    => Auth::id(),
+            'user_id' => Auth::id(),
         ];
 
         if ($exception instanceof \Throwable) {
@@ -43,7 +42,7 @@ class DatabaseLoggerHandler extends AbstractProcessingHandler
         try {
             ExceptionLog::create($data);
         } catch (\Throwable $e) {
-           //
+            //
         }
 
         if (Config::get('exception-logger.telegram.enabled')) {
@@ -56,10 +55,17 @@ class DatabaseLoggerHandler extends AbstractProcessingHandler
         $token = Config::get('exception-logger.telegram.token');
         $chatId = Config::get('exception-logger.telegram.chat_id');
 
-        if (! $token || ! $chatId) return;
+        if (! $token || ! $chatId) {
+            return;
+        }
 
+<<<<<<< HEAD
         $cacheKey = 'telegram_log_' . md5($record->message);
         $throttleTime = Config::get('exception-logger.telegram.throttle_minutes', 5);
+=======
+        $cacheKey = 'telegram_log_'.md5($record->message);
+        $throttleTime = Config::get('filament-exception-logger.telegram.throttle_minutes', 5);
+>>>>>>> 8f35cfb358cfbb1ce530a2f78d730df32b334f37
 
         if (Cache::has($cacheKey)) {
             return;
@@ -69,7 +75,7 @@ class DatabaseLoggerHandler extends AbstractProcessingHandler
         $msgPreview = substr($record->message, 0, 300);
 
         $text = "🚨 <b>EXCEPTION ALERT</b> 🚨\n\n";
-        $text .= "<b>App:</b> " . config('app.name') . " ({$env})\n";
+        $text .= '<b>App:</b> '.config('app.name')." ({$env})\n";
         $text .= "<b>Level:</b> {$record->level->name}\n";
         $text .= "<b>URL:</b> {$data['url']}\n";
         $text .= "<b>IP:</b> {$data['ip']}\n\n";

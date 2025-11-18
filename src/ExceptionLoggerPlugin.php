@@ -8,7 +8,6 @@ use Filament\Panel;
 
 class ExceptionLoggerPlugin implements Plugin
 {
-
     public function getId(): string
     {
         return 'exception-logger';
@@ -19,7 +18,7 @@ class ExceptionLoggerPlugin implements Plugin
         $panel
             ->resources([
                 ExceptionLogResource::class,
-        ]);
+            ]);
     }
 
     public function boot(Panel $panel): void

@@ -2,9 +2,9 @@
 
 namespace Arseno25\ExceptionLogger\Tests;
 
+use Arseno25\ExceptionLogger\ExceptionLoggerServiceProvider;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Orchestra\Testbench\TestCase as Orchestra;
-use Arseno25\ExceptionLogger\ExceptionLoggerServiceProvider;
 
 class TestCase extends Orchestra
 {

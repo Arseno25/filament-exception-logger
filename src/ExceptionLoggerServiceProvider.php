@@ -2,9 +2,9 @@
 
 namespace Arseno25\ExceptionLogger;
 
+use Arseno25\ExceptionLogger\Commands\ExceptionLoggerCommand;
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
-use Arseno25\ExceptionLogger\Commands\ExceptionLoggerCommand;
 
 class ExceptionLoggerServiceProvider extends PackageServiceProvider
 {

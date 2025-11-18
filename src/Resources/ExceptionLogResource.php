@@ -6,24 +6,33 @@ use Arseno25\ExceptionLogger\Models\ExceptionLog;
 use Arseno25\ExceptionLogger\Resources\Pages\ListExceptionLogs;
 use Arseno25\ExceptionLogger\Resources\Pages\ViewExceptionLog;
 use Filament\Actions\ViewAction;
+use Filament\Infolists\Components\TextEntry;
 use Filament\Resources\Resource;
 use Filament\Schemas\Components\Section;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables;
 use Filament\Tables\Table;
-use Filament\Infolists\Components\TextEntry;
-use Filament\Infolists\Components\KeyValueEntry;
 use Novadaemon\FilamentPrettyJson\Infolist\PrettyJsonEntry;
 
 class ExceptionLogResource extends Resource
 {
     protected static ?string $model = ExceptionLog::class;
+
     protected static string|null|\BackedEnum $navigationIcon = Heroicon::OutlinedExclamationTriangle;
+
     protected static ?string $navigationLabel = 'Error Logs';
+
     protected static string|null|\UnitEnum $navigationGroup = 'System';
 
-    public static function canCreate(): bool { return false; }
-    public static function canEdit($record): bool { return false; }
+    public static function canCreate(): bool
+    {
+        return false;
+    }
+
+    public static function canEdit($record): bool
+    {
+        return false;
+    }
 
     public static function table(Table $table): Table
     {
