@@ -12,21 +12,15 @@ class ExceptionLog extends Model
 
     protected $table = 'exception_logger_table';
 
-    protected $fillable = [
-        'level',
-        'message',
-        'context',
-        'file',
-        'line',
-        'method',
-        'url',
-        'ip',
-        'user_id',
+    protected $guarded = [];
+
+    protected $casts = [
+        'context' => 'array',
     ];
 
     public function prunable(): Builder
     {
-        $days = config('filament-exception-logger.pruning.retention_days', 30);
+        $days = config('exception-logger.pruning.retention_days', 30);
 
         return static::where('created_at', '<=', now()->subDays($days));
     }

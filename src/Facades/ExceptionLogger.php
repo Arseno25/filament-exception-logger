@@ -11,6 +11,6 @@ class ExceptionLogger extends Facade
 {
     protected static function getFacadeAccessor(): string
     {
-        return \Arseno25\ExceptionLogger\ExceptionLogger::class;
+        return 'exception-logger';
     }
 }

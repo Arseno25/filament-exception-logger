@@ -1,6 +1,6 @@
 <?php
 
-namespace Arseno25\ExceptionLogger;
+namespace Arseno25\ExceptionLogger\Logging;
 
 use Illuminate\Support\Facades\Cache;
 use Monolog\Handler\AbstractProcessingHandler;
@@ -46,20 +46,20 @@ class DatabaseLoggerHandler extends AbstractProcessingHandler
            //
         }
 
-        if (Config::get('filament-exception-logger.telegram.enabled')) {
+        if (Config::get('exception-logger.telegram.enabled')) {
             $this->sendTelegram($record, $data);
         }
     }
 
     protected function sendTelegram(LogRecord $record, array $data): void
     {
-        $token = Config::get('filament-exception-logger.telegram.token');
-        $chatId = Config::get('filament-exception-logger.telegram.chat_id');
+        $token = Config::get('exception-logger.telegram.token');
+        $chatId = Config::get('exception-logger.telegram.chat_id');
 
         if (! $token || ! $chatId) return;
 
         $cacheKey = 'telegram_log_' . md5($record->message);
-        $throttleTime = Config::get('filament-exception-logger.telegram.throttle_minutes', 5);
+        $throttleTime = Config::get('exception-logger.telegram.throttle_minutes', 5);
 
         if (Cache::has($cacheKey)) {
             return;
