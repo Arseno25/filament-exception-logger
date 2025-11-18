@@ -1,0 +1,37 @@
+<?php
+
+namespace Arseno25\ExceptionLogger\Tests;
+
+use Illuminate\Database\Eloquent\Factories\Factory;
+use Orchestra\Testbench\TestCase as Orchestra;
+use Arseno25\ExceptionLogger\ExceptionLoggerServiceProvider;
+
+class TestCase extends Orchestra
+{
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        Factory::guessFactoryNamesUsing(
+            fn (string $modelName) => 'Arseno25\\ExceptionLogger\\Database\\Factories\\'.class_basename($modelName).'Factory'
+        );
+    }
+
+    protected function getPackageProviders($app)
+    {
+        return [
+            ExceptionLoggerServiceProvider::class,
+        ];
+    }
+
+    public function getEnvironmentSetUp($app)
+    {
+        config()->set('database.default', 'testing');
+
+        /*
+         foreach (\Illuminate\Support\Facades\File::allFiles(__DIR__ . '/../database/migrations') as $migration) {
+            (include $migration->getRealPath())->up();
+         }
+         */
+    }
+}

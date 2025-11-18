@@ -1,0 +1,25 @@
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    public function up()
+    {
+        Schema::create('exception_logger_table', function (Blueprint $table) {
+            $table->id();
+            $table->string('level')->index(); // e.g., ERROR, CRITICAL
+            $table->text('message');
+            $table->longText('context')->nullable(); // JSON Payload (stack trace/SQL bindings)
+            $table->string('file')->nullable();
+            $table->integer('line')->nullable();
+            $table->string('method')->nullable(); // GET/POST
+            $table->string('url')->nullable();
+            $table->string('ip')->nullable();
+            $table->unsignedBigInteger('user_id')->nullable()->index();
+            $table->timestamps();
+        });
+    }
+};
