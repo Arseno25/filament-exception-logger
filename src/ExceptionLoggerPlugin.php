@@ -7,7 +7,6 @@ use Arseno25\ExceptionLogger\Widgets\ExceptionStatsOverview;
 use Filament\Contracts\Plugin;
 use Filament\Panel;
 use Filament\Support\Assets\Css;
-use Filament\Support\Facades\FilamentAsset;
 
 class ExceptionLoggerPlugin implements Plugin
 {
@@ -26,7 +25,7 @@ class ExceptionLoggerPlugin implements Plugin
                 ExceptionStatsOverview::class,
             ])
             ->assets([
-                Css::make('exception-logger-ai-solution', __DIR__ . '/../resources/dist/ai-solution.css'),
+                Css::make('exception-logger-ai-solution', __DIR__.'/../resources/dist/ai-solution.css'),
             ]);
     }
 

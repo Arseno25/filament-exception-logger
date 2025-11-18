@@ -5,7 +5,7 @@ namespace Arseno25\ExceptionLogger\Enums;
 use Filament\Support\Contracts\HasColor;
 use Filament\Support\Contracts\HasLabel;
 
-enum ExceptionLogStatus: string implements HasLabel, HasColor
+enum ExceptionLogStatus: string implements HasColor, HasLabel
 {
     case New = 'new';
     case InProgress = 'in_progress';

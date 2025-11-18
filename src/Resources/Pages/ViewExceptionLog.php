@@ -6,8 +6,6 @@ use Arseno25\ExceptionLogger\Resources\ExceptionLogResource;
 use Filament\Actions\Action;
 use Filament\Resources\Pages\ViewRecord;
 use Illuminate\Support\Facades\Http;
-use Illuminate\Support\HtmlString;
-use Illuminate\Support\Str;
 
 class ViewExceptionLog extends ViewRecord
 {
@@ -31,7 +29,7 @@ class ViewExceptionLog extends ViewRecord
                     if (empty($config['enabled']) || empty($config['api_key'])) {
                         return view('exception-logger::ai-solution', [
                             'content' => null,
-                            'error' => 'AI Feature is disabled or API Key is missing.'
+                            'error' => 'AI Feature is disabled or API Key is missing.',
                         ]);
                     }
 
@@ -40,11 +38,11 @@ class ViewExceptionLog extends ViewRecord
                     $endpoint = "$baseUrl/chat/completions";
                     $contextSnippet = json_encode(array_slice($record->context ?? [], 0, 2));
 
-                    $prompt = "Act as a Senior Laravel Developer. Analyze this exception:\n" .
-                        "Message: {$record->message}\n" .
-                        "File: {$record->file}:{$record->line}\n" .
-                        "Context: {$contextSnippet}\n\n" .
-                        "Explain the root cause concisely and provide the code fix. Use Markdown.";
+                    $prompt = "Act as a Senior Laravel Developer. Analyze this exception:\n".
+                        "Message: {$record->message}\n".
+                        "File: {$record->file}:{$record->line}\n".
+                        "Context: {$contextSnippet}\n\n".
+                        'Explain the root cause concisely and provide the code fix. Use Markdown.';
 
                     try {
                         // 3. Call API
@@ -63,20 +61,20 @@ class ViewExceptionLog extends ViewRecord
                         if ($response->failed()) {
                             return view('exception-logger::ai-solution', [
                                 'content' => null,
-                                'error' => 'API Error: ' . $response->body()
+                                'error' => 'API Error: '.$response->body(),
                             ]);
                         }
 
                         // 4. Return View dengan Content Sukses
                         return view('exception-logger::ai-solution', [
                             'content' => $response->json('choices.0.message.content'),
-                            'error' => null
+                            'error' => null,
                         ]);
 
                     } catch (\Exception $e) {
                         return view('exception-logger::ai-solution', [
                             'content' => null,
-                            'error' => 'Connection Error: ' . $e->getMessage()
+                            'error' => 'Connection Error: '.$e->getMessage(),
                         ]);
                     }
                 }),

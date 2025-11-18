@@ -10,8 +10,11 @@ use Flowframe\Trend\TrendValue;
 class ExceptionStatsOverview extends ChartWidget
 {
     protected ?string $heading = 'Errors (Last 7 Days)';
-    protected int | string | array $columnSpan = 'full';
+
+    protected int|string|array $columnSpan = 'full';
+
     protected ?string $maxHeight = '300px';
+
     protected function getData(): array
     {
         $data = Trend::model(ExceptionLog::class)
