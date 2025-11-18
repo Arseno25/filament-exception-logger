@@ -2,6 +2,7 @@
 
 namespace Arseno25\ExceptionLogger\Resources;
 
+use Arseno25\ExceptionLogger\Enums\ExceptionLogStatus;
 use Arseno25\ExceptionLogger\Models\ExceptionLog;
 use Arseno25\ExceptionLogger\Resources\Pages\ListExceptionLogs;
 use Arseno25\ExceptionLogger\Resources\Pages\ViewExceptionLog;
@@ -59,6 +60,11 @@ class ExceptionLogResource extends Resource
                     ->limit(60)
                     ->searchable()
                     ->tooltip(fn ($record) => $record->message),
+
+                Tables\Columns\SelectColumn::make('status')
+                    ->options(ExceptionLogStatus::class)
+                    ->selectablePlaceholder(false)
+                    ->sortable(),
 
                 Tables\Columns\TextColumn::make('ip')
                     ->label('IP Address')
