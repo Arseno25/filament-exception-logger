@@ -33,8 +33,11 @@ class ViewExceptionLog extends ViewRecord
                         ]);
                     }
 
-                    // 2. Siapkan Request
-                    $baseUrl = rtrim($config['base_url'], '/');
+                // Pastikan record tersedia baik saat dipanggil dari Filament maupun dari test
+                $record ??= $this->getRecord();
+
+                // 2. Siapkan Request
+                $baseUrl = rtrim($config['base_url'], '/');
                     $endpoint = "$baseUrl/chat/completions";
                     $contextSnippet = json_encode(array_slice($record->context ?? [], 0, 2));
 
