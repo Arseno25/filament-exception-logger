@@ -16,8 +16,9 @@ return new class extends Migration
             $table->string('file')->nullable();
             $table->integer('line')->nullable();
             $table->string('method')->nullable(); // GET/POST
-            $table->string('url')->nullable();
+            $table->text('url')->nullable();
             $table->string('ip')->nullable();
+            $table->text('user_agent')->nullable();
             $table->unsignedBigInteger('user_id')->nullable()->index();
             $table->timestamps();
         });

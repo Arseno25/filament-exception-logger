@@ -18,6 +18,41 @@ class DatabaseLoggerHandler extends AbstractProcessingHandler
      */
     protected function write(LogRecord $record): void
     {
+        // ==================================================================
+        // 1. IDEMPOTENCY CHECK (ANTI DUPLIKAT)
+        // ==================================================================
+
+        // Kita buat "sidik jari" unik dari data penting error ini
+        $signatureData = [
+            'msg' => $record->message,
+            'lvl' => $record->level->name,
+            'url' => Request::fullUrl(),
+            'ip'  => Request::ip(),
+        ];
+
+        // Jika ada exception object, tambahkan file & line agar lebih spesifik
+        if (isset($record->context['exception']) && $record->context['exception'] instanceof \Throwable) {
+            $e = $record->context['exception'];
+            $signatureData['file'] = $e->getFile();
+            $signatureData['line'] = $e->getLine();
+        }
+
+        // Buat Hash Unik
+        $signature = 'log_lock_' . md5(json_encode($signatureData));
+
+        // Jika log yang SAMA PERSIS sudah ada di cache (baru terjadi < 2 detik lalu), STOP disini.
+        if (Cache::has($signature)) {
+            return;
+        }
+
+        // Kunci signature ini selama 2 detik
+        Cache::put($signature, true, now()->addSeconds(2));
+
+
+        // ==================================================================
+        // 2. PROSES DATA & SIMPAN
+        // ==================================================================
+
         $context = $record->context;
         $exception = $context['exception'] ?? null;
 
@@ -42,7 +77,7 @@ class DatabaseLoggerHandler extends AbstractProcessingHandler
         try {
             ExceptionLog::create($data);
         } catch (\Throwable $e) {
-            //
+            // Silent fail agar aplikasi utama tidak crash jika DB log bermasalah
         }
 
         if (Config::get('exception-logger.telegram.enabled')) {
@@ -59,10 +94,10 @@ class DatabaseLoggerHandler extends AbstractProcessingHandler
             return;
         }
 
+        // Cache Key untuk Telegram berbeda (Throttling 5 menit) agar tidak spam notifikasi
+        // Logika ini tetap dipertahankan terpisah dari Anti-Duplikat Database di atas.
         $cacheKey = 'telegram_log_' . md5($record->message);
         $throttleTime = Config::get('exception-logger.telegram.throttle_minutes', 5);
-        $cacheKey = 'telegram_log_'.md5($record->message);
-        $throttleTime = Config::get('filament-exception-logger.telegram.throttle_minutes', 5);
 
         if (Cache::has($cacheKey)) {
             return;
@@ -93,7 +128,7 @@ class DatabaseLoggerHandler extends AbstractProcessingHandler
             Cache::put($cacheKey, true, now()->addMinutes($throttleTime));
 
         } catch (\Throwable $e) {
-            //
+            // Silent fail
         }
     }
 }

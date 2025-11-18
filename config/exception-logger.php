@@ -11,7 +11,6 @@ return [
         'enabled' => env('EXCEPTION_LOGGER_TELEGRAM_ENABLED', false),
         'token' => env('TELEGRAM_BOT_TOKEN'),
         'chat_id' => env('TELEGRAM_CHAT_ID'),
-        // Mencegah spam: error yang sama tidak akan dikirim lagi dalam X menit
         'throttle_minutes' => 5,
     ],
 ];
