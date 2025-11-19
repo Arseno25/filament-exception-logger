@@ -30,6 +30,7 @@ class ViewExceptionLog extends ViewRecord
                     if (empty($config['enabled']) || empty($config['api_key'])) {
                         /** @var view-string $view */
                         $view = 'exception-logger::ai-solution';
+
                         return view($view, [
                             'content' => null,
                             'error' => 'AI Feature is disabled or API Key is missing.',
@@ -67,6 +68,7 @@ class ViewExceptionLog extends ViewRecord
                         if ($response->failed()) {
                             /** @var view-string $view */
                             $view = 'exception-logger::ai-solution';
+
                             return view($view, [
                                 'content' => null,
                                 'error' => 'API Error: '.$response->body(),
@@ -76,6 +78,7 @@ class ViewExceptionLog extends ViewRecord
                         // 4. Return View dengan Content Sukses
                         /** @var view-string $view */
                         $view = 'exception-logger::ai-solution';
+
                         return view($view, [
                             'content' => $response->json('choices.0.message.content'),
                             'error' => null,
@@ -84,6 +87,7 @@ class ViewExceptionLog extends ViewRecord
                     } catch (\Exception $e) {
                         /** @var view-string $view */
                         $view = 'exception-logger::ai-solution';
+
                         return view($view, [
                             'content' => null,
                             'error' => 'Connection Error: '.$e->getMessage(),
