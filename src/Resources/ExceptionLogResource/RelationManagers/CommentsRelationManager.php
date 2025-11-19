@@ -56,7 +56,7 @@ class CommentsRelationManager extends RelationManager
                 Action::make('addComment')
                     ->label('Add Comment')
                     ->modalHeading('Add Comment')
-                ->schema([
+                    ->schema([
                         Textarea::make('content')
                             ->label('Comment')
                             ->rows(4)
@@ -68,7 +68,7 @@ class CommentsRelationManager extends RelationManager
                             ->searchable()
                             ->preload()
                             ->getSearchResultsUsing(function (string $search): array {
-                    $userModelClass = UserModelResolver::resolve();
+                                $userModelClass = UserModelResolver::resolve();
 
                                 return $userModelClass::query()
                                     ->when($search !== '', function ($query) use ($search) {
@@ -84,7 +84,7 @@ class CommentsRelationManager extends RelationManager
                                     return [];
                                 }
 
-                    $userModelClass = UserModelResolver::resolve();
+                                $userModelClass = UserModelResolver::resolve();
 
                                 return $userModelClass::query()
                                     ->whereIn('id', $values)
@@ -107,7 +107,7 @@ class CommentsRelationManager extends RelationManager
                             return;
                         }
 
-                $userModelClass = UserModelResolver::resolve();
+                        $userModelClass = UserModelResolver::resolve();
 
                         $users = $userModelClass::query()
                             ->whereIn('id', $mentionIds)
