@@ -24,11 +24,12 @@ class DatabaseLoggerHandler extends AbstractProcessingHandler
         // ==================================================================
 
         // Create unique fingerprint from important error data
+        // Use safe fallbacks for test environment
         $signatureData = [
             'msg' => $record->message,
             'lvl' => $record->level->name,
-            'url' => Request::fullUrl(),
-            'ip' => Request::ip(),
+            'url' => $this->safeGetUrl(),
+            'ip' => $this->safeGetIp(),
         ];
 
         // If exception object exists, add file & line for more specificity
@@ -65,11 +66,11 @@ class DatabaseLoggerHandler extends AbstractProcessingHandler
             'level' => $determinedLevel,
             'message' => $record->message,
             'context' => $context,
-            'method' => Request::method(),
-            'url' => Request::fullUrl(),
-            'ip' => Request::ip(),
-            'user_agent' => Request::userAgent(),
-            'user_id' => Auth::id(),
+            'method' => $this->safeGetMethod(),
+            'url' => $this->safeGetUrl(),
+            'ip' => $this->safeGetIp(),
+            'user_agent' => $this->safeGetUserAgent(),
+            'user_id' => $this->safeGetUserId(),
         ];
 
         if ($exception instanceof \Throwable) {
@@ -119,11 +120,11 @@ class DatabaseLoggerHandler extends AbstractProcessingHandler
             return;
         }
 
-        $env = app()->environment();
+        $env = $this->safeGetEnvironment();
         $msgPreview = substr($record->message, 0, 300);
 
         $text = "🚨 <b>EXCEPTION ALERT</b> 🚨\n\n";
-        $text .= '<b>App:</b> '.config('app.name')." ({$env})\n";
+        $text .= '<b>App:</b> '.$this->safeGetAppName()." ({$env})\n";
         $text .= "<b>Level:</b> {$record->level->name}\n";
         $text .= "<b>URL:</b> {$data['url']}\n";
         $text .= "<b>IP:</b> {$data['ip']}\n\n";
@@ -518,5 +519,89 @@ class DatabaseLoggerHandler extends AbstractProcessingHandler
 
         // Use level from record if no matching criteria
         return $levelDisplayMap[$levelKey];
+    }
+
+    /**
+     * Safely get the current HTTP method with fallback for testing
+     */
+    private function safeGetMethod(): string
+    {
+        try {
+            return Request::method();
+        } catch (\Throwable $e) {
+            return 'CLI';
+        }
+    }
+
+    /**
+     * Safely get the current URL with fallback for testing
+     */
+    private function safeGetUrl(): string
+    {
+        try {
+            return Request::fullUrl();
+        } catch (\Throwable $e) {
+            return 'CLI';
+        }
+    }
+
+    /**
+     * Safely get the current IP with fallback for testing
+     */
+    private function safeGetIp(): string
+    {
+        try {
+            return Request::ip() ?: '127.0.0.1';
+        } catch (\Throwable $e) {
+            return '127.0.0.1';
+        }
+    }
+
+    /**
+     * Safely get the user agent with fallback for testing
+     */
+    private function safeGetUserAgent(): string
+    {
+        try {
+            return Request::userAgent() ?: 'CLI/Test';
+        } catch (\Throwable $e) {
+            return 'CLI/Test';
+        }
+    }
+
+    /**
+     * Safely get the current user ID with fallback for testing
+     */
+    private function safeGetUserId(): ?int
+    {
+        try {
+            return Auth::id();
+        } catch (\Throwable $e) {
+            return null;
+        }
+    }
+
+    /**
+     * Safely get the application environment with fallback for testing
+     */
+    private function safeGetEnvironment(): string
+    {
+        try {
+            return app()->environment();
+        } catch (\Throwable $e) {
+            return 'testing';
+        }
+    }
+
+    /**
+     * Safely get the application name with fallback for testing
+     */
+    private function safeGetAppName(): string
+    {
+        try {
+            return config('app.name') ?: 'Test App';
+        } catch (\Throwable $e) {
+            return 'Test App';
+        }
     }
 }
