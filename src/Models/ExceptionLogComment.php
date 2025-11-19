@@ -2,6 +2,7 @@
 
 namespace Arseno25\ExceptionLogger\Models;
 
+use Arseno25\ExceptionLogger\Support\UserModelResolver;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
@@ -21,7 +22,7 @@ class ExceptionLogComment extends Model
 
     public function user(): BelongsTo
     {
-        return $this->belongsTo(config('auth.providers.users.model', \App\Models\User::class));
+        return $this->belongsTo(UserModelResolver::resolve());
     }
 }
 

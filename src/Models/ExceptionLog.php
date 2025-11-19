@@ -8,6 +8,23 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Prunable;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
+/**
+ * @property int $id
+ * @property string $level
+ * @property string $message
+ * @property array|null $context
+ * @property string|null $file
+ * @property int|null $line
+ * @property string|null $method
+ * @property string|null $url
+ * @property string|null $ip
+ * @property string|null $user_agent
+ * @property ExceptionLogStatus $status
+ * @property int|null $user_id
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, ExceptionLogComment> $comments
+ */
 class ExceptionLog extends Model
 {
     use Prunable;

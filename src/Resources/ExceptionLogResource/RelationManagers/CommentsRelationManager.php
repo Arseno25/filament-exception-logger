@@ -4,8 +4,8 @@ namespace Arseno25\ExceptionLogger\Resources\ExceptionLogResource\RelationManage
 
 use Arseno25\ExceptionLogger\Models\ExceptionLog;
 use Arseno25\ExceptionLogger\Resources\ExceptionLogResource;
+use Arseno25\ExceptionLogger\Support\UserModelResolver;
 use Filament\Actions\Action;
-use Filament\Forms;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Notifications\Notification as FilamentNotification;
@@ -22,7 +22,7 @@ class CommentsRelationManager extends RelationManager
 
     protected static ?string $recordTitleAttribute = 'content';
 
-    public function form(Schema $schema): Schema
+    public function schema(Schema $schema): Schema
     {
         return $schema
             ->schema([
@@ -56,7 +56,7 @@ class CommentsRelationManager extends RelationManager
                 Action::make('addComment')
                     ->label('Add Comment')
                     ->modalHeading('Add Comment')
-                    ->form([
+                ->schema([
                         Textarea::make('content')
                             ->label('Comment')
                             ->rows(4)
@@ -68,7 +68,7 @@ class CommentsRelationManager extends RelationManager
                             ->searchable()
                             ->preload()
                             ->getSearchResultsUsing(function (string $search): array {
-                                $userModelClass = config('auth.providers.users.model', \App\Models\User::class);
+                    $userModelClass = UserModelResolver::resolve();
 
                                 return $userModelClass::query()
                                     ->when($search !== '', function ($query) use ($search) {
@@ -84,7 +84,7 @@ class CommentsRelationManager extends RelationManager
                                     return [];
                                 }
 
-                                $userModelClass = config('auth.providers.users.model', \App\Models\User::class);
+                    $userModelClass = UserModelResolver::resolve();
 
                                 return $userModelClass::query()
                                     ->whereIn('id', $values)
@@ -107,7 +107,7 @@ class CommentsRelationManager extends RelationManager
                             return;
                         }
 
-                        $userModelClass = config('auth.providers.users.model', \App\Models\User::class);
+                $userModelClass = UserModelResolver::resolve();
 
                         $users = $userModelClass::query()
                             ->whereIn('id', $mentionIds)
