@@ -159,7 +159,7 @@ class DatabaseLoggerHandler extends AbstractProcessingHandler
         }
 
         // Cache Key for Slack (Throttling)
-        $cacheKey = 'slack_log_' . md5($record->message);
+        $cacheKey = 'slack_log_'.md5($record->message);
         $throttleTime = Config::get('exception-logger.slack.throttle_minutes', 5);
 
         if (Cache::has($cacheKey)) {
@@ -181,7 +181,7 @@ class DatabaseLoggerHandler extends AbstractProcessingHandler
                     'fields' => [
                         [
                             'title' => 'Application',
-                            'value' => config('app.name') . " ({$env})",
+                            'value' => config('app.name')." ({$env})",
                             'short' => true,
                         ],
                         [
@@ -241,7 +241,7 @@ class DatabaseLoggerHandler extends AbstractProcessingHandler
         }
 
         // Cache Key for Discord (Throttling)
-        $cacheKey = 'discord_log_' . md5($record->message);
+        $cacheKey = 'discord_log_'.md5($record->message);
         $throttleTime = Config::get('exception-logger.discord.throttle_minutes', 5);
 
         if (Cache::has($cacheKey)) {
@@ -262,7 +262,7 @@ class DatabaseLoggerHandler extends AbstractProcessingHandler
                     'fields' => [
                         [
                             'name' => 'Application',
-                            'value' => config('app.name') . " ({$env})",
+                            'value' => config('app.name')." ({$env})",
                             'inline' => true,
                         ],
                         [
@@ -324,7 +324,7 @@ class DatabaseLoggerHandler extends AbstractProcessingHandler
         }
 
         // Cache Key for Email (Throttling)
-        $cacheKey = 'email_log_' . md5($record->message);
+        $cacheKey = 'email_log_'.md5($record->message);
         $throttleTime = Config::get('exception-logger.email.throttle_minutes', 5);
 
         if (Cache::has($cacheKey)) {
@@ -333,7 +333,7 @@ class DatabaseLoggerHandler extends AbstractProcessingHandler
 
         $env = app()->environment();
         $level = $data['level'] ?? $record->level->name;
-        $subject = "{$subjectPrefix} {$level} - " . config('app.name') . " ({$env})";
+        $subject = "{$subjectPrefix} {$level} - ".config('app.name')." ({$env})";
 
         try {
             $recipients = is_array($to) ? $to : explode(',', $to);
@@ -355,14 +355,14 @@ class DatabaseLoggerHandler extends AbstractProcessingHandler
     protected function formatEmailContent(LogRecord $record, array $data, string $level, string $env): string
     {
         $content = "Exception Alert\n";
-        $content .= str_repeat('=', 50) . "\n\n";
-        $content .= "Application: " . config('app.name') . " ({$env})\n";
+        $content .= str_repeat('=', 50)."\n\n";
+        $content .= 'Application: '.config('app.name')." ({$env})\n";
         $content .= "Level: {$level}\n";
-        $content .= "Time: " . now()->format('Y-m-d H:i:s') . "\n";
-        $content .= "URL: " . ($data['url'] ?? 'N/A') . "\n";
-        $content .= "Method: " . ($data['method'] ?? 'N/A') . "\n";
-        $content .= "IP Address: " . ($data['ip'] ?? 'N/A') . "\n";
-        $content .= "User Agent: " . ($data['user_agent'] ?? 'N/A') . "\n\n";
+        $content .= 'Time: '.now()->format('Y-m-d H:i:s')."\n";
+        $content .= 'URL: '.($data['url'] ?? 'N/A')."\n";
+        $content .= 'Method: '.($data['method'] ?? 'N/A')."\n";
+        $content .= 'IP Address: '.($data['ip'] ?? 'N/A')."\n";
+        $content .= 'User Agent: '.($data['user_agent'] ?? 'N/A')."\n\n";
 
         if (isset($data['file'])) {
             $content .= "File: {$data['file']}\n";
@@ -370,13 +370,13 @@ class DatabaseLoggerHandler extends AbstractProcessingHandler
         }
 
         $content .= "Message:\n";
-        $content .= str_repeat('-', 50) . "\n";
-        $content .= $record->message . "\n\n";
+        $content .= str_repeat('-', 50)."\n";
+        $content .= $record->message."\n\n";
 
-        if (!empty($data['context'])) {
+        if (! empty($data['context'])) {
             $content .= "Context:\n";
-            $content .= str_repeat('-', 50) . "\n";
-            $content .= json_encode($data['context'], JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES) . "\n";
+            $content .= str_repeat('-', 50)."\n";
+            $content .= json_encode($data['context'], JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES)."\n";
         }
 
         return $content;
@@ -420,10 +420,6 @@ class DatabaseLoggerHandler extends AbstractProcessingHandler
 
     /**
      * Determine log level based on exception type or specific criteria
-     *
-     * @param \Throwable|null $exception
-     * @param LogRecord $record
-     * @return string
      */
     protected function determineLevel(?\Throwable $exception, LogRecord $record): string
     {
@@ -478,7 +474,7 @@ class DatabaseLoggerHandler extends AbstractProcessingHandler
             }
 
             // Check if message contains critical keyword
-            if (!$determinedLevel) {
+            if (! $determinedLevel) {
                 foreach ($criticalKeywords as $keyword) {
                     if (str_contains($message, strtolower($keyword))) {
                         $determinedLevel = 'CRITICAL';
@@ -488,7 +484,7 @@ class DatabaseLoggerHandler extends AbstractProcessingHandler
             }
 
             // Check HTTP status code for HTTP exceptions
-            if (!$determinedLevel && method_exists($exception, 'getStatusCode')) {
+            if (! $determinedLevel && method_exists($exception, 'getStatusCode')) {
                 $statusCode = $exception->getStatusCode();
                 // 5xx errors are critical
                 if ($statusCode >= 500) {
@@ -500,6 +496,7 @@ class DatabaseLoggerHandler extends AbstractProcessingHandler
             // Use the higher level
             if ($determinedLevel) {
                 $determinedLevelValue = $levelHierarchy[$determinedLevel] ?? 4;
+
                 return $determinedLevelValue > $currentLevelValue ? $determinedLevel : $currentLevel;
             }
         }

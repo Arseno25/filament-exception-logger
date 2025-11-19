@@ -34,7 +34,7 @@ class ExceptionLoggerServiceProvider extends PackageServiceProvider
 
         FilamentAsset::register([
             Css::make('exception-logger-ai-solution', __DIR__.'/../resources/dist/ai-solution.css'),
-            Css::make('exception-logger-code-snippet', __DIR__ . '/../resources/dist/code-snippet.css'),
+            Css::make('exception-logger-code-snippet', __DIR__.'/../resources/dist/code-snippet.css'),
         ], package: 'arseno25/exception-logger');
     }
 }

@@ -30,12 +30,12 @@ class ExceptionLog extends Model
     /**
      * Get code snippet around the error line
      *
-     * @param int $contextLines Number of lines before and after the error line
+     * @param  int  $contextLines  Number of lines before and after the error line
      * @return array|null Returns array with 'lines', 'startLine', 'errorLine' or null if file doesn't exist
      */
     public function getSnippet(int $contextLines = 10): ?array
     {
-        if (!$this->file || !$this->line || !file_exists($this->file)) {
+        if (! $this->file || ! $this->line || ! file_exists($this->file)) {
             return null;
         }
 
@@ -49,7 +49,7 @@ class ExceptionLog extends Model
             $currentLine = 1;
 
             // Read file line by line
-            while (!$file->eof() && $currentLine <= $endLine) {
+            while (! $file->eof() && $currentLine <= $endLine) {
                 $line = $file->current();
 
                 if ($currentLine >= $startLine) {
@@ -76,7 +76,7 @@ class ExceptionLog extends Model
      */
     public function getFileExtension(): ?string
     {
-        if (!$this->file) {
+        if (! $this->file) {
             return null;
         }
 

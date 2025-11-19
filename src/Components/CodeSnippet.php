@@ -25,4 +25,3 @@ class CodeSnippet extends Component
         ]);
     }
 }
-
