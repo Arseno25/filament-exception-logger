@@ -22,13 +22,15 @@ class ViewExceptionLog extends ViewRecord
                 ->modalHeading('AI Diagnosis & Solution')
                 ->modalWidth('5xl')
                 ->modalSubmitAction(false)
-                ->modalCancelAction(fn ($action) => $action->label('Close'))
+                ->modalCancelActionLabel('Close')
                 ->modalContent(function ($record) {
                     $config = config('exception-logger.ai');
 
                     // 1. Cek Config
                     if (empty($config['enabled']) || empty($config['api_key'])) {
-                        return view('exception-logger::ai-solution', [
+                        /** @var view-string $view */
+                        $view = 'exception-logger::ai-solution';
+                        return view($view, [
                             'content' => null,
                             'error' => 'AI Feature is disabled or API Key is missing.',
                         ]);
@@ -63,20 +65,26 @@ class ViewExceptionLog extends ViewRecord
                             ]);
 
                         if ($response->failed()) {
-                            return view('exception-logger::ai-solution', [
+                            /** @var view-string $view */
+                            $view = 'exception-logger::ai-solution';
+                            return view($view, [
                                 'content' => null,
                                 'error' => 'API Error: '.$response->body(),
                             ]);
                         }
 
                         // 4. Return View dengan Content Sukses
-                        return view('exception-logger::ai-solution', [
+                        /** @var view-string $view */
+                        $view = 'exception-logger::ai-solution';
+                        return view($view, [
                             'content' => $response->json('choices.0.message.content'),
                             'error' => null,
                         ]);
 
                     } catch (\Exception $e) {
-                        return view('exception-logger::ai-solution', [
+                        /** @var view-string $view */
+                        $view = 'exception-logger::ai-solution';
+                        return view($view, [
                             'content' => null,
                             'error' => 'Connection Error: '.$e->getMessage(),
                         ]);

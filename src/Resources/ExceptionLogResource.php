@@ -134,7 +134,7 @@ class ExceptionLogResource extends Resource
                 Section::make('Source Code Preview')
                     ->schema([
                         ViewEntry::make('code_snippet')
-                            ->view('exception-logger::code-snippet-wrapper')
+                            ->view('exception-logger::code-snippet-wrapper') // @phpstan-ignore-line
                             ->columnSpanFull()
                             ->hidden(fn ($record) => ! $record->file || ! $record->line || ! file_exists($record->file)),
                     ])

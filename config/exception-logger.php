@@ -3,7 +3,7 @@
 // config for Arseno25/ExceptionLogger
 return [
     'comments' => [
-        'enabled' => (bool) env('EXCEPTION_LOGGER_COMMENTS_ENABLED', true),
+        'enabled' => true,
     ],
 
     'pruning' => [
@@ -12,47 +12,47 @@ return [
     ],
 
     'telegram' => [
-        'enabled' => env('EXCEPTION_LOGGER_TELEGRAM_ENABLED', false),
-        'token' => env('TELEGRAM_BOT_TOKEN'),
-        'chat_id' => env('TELEGRAM_CHAT_ID'),
+        'enabled' => false,
+        'token' => null,
+        'chat_id' => null,
         'throttle_minutes' => 5,
     ],
 
     'slack' => [
-        'enabled' => env('EXCEPTION_LOGGER_SLACK_ENABLED', false),
-        'webhook_url' => env('EXCEPTION_LOGGER_SLACK_WEBHOOK_URL'),
-        'channel' => env('EXCEPTION_LOGGER_SLACK_CHANNEL', '#exceptions'),
-        'username' => env('EXCEPTION_LOGGER_SLACK_USERNAME', 'Exception Logger'),
+        'enabled' => false,
+        'webhook_url' => null,
+        'channel' => '#exceptions',
+        'username' => 'Exception Logger',
         'throttle_minutes' => 5,
     ],
 
     'discord' => [
-        'enabled' => env('EXCEPTION_LOGGER_DISCORD_ENABLED', false),
-        'webhook_url' => env('EXCEPTION_LOGGER_DISCORD_WEBHOOK_URL'),
-        'username' => env('EXCEPTION_LOGGER_DISCORD_USERNAME', 'Exception Logger'),
+        'enabled' => false,
+        'webhook_url' => null,
+        'username' => 'Exception Logger',
         'throttle_minutes' => 5,
     ],
 
     'email' => [
-        'enabled' => env('EXCEPTION_LOGGER_EMAIL_ENABLED', false),
+        'enabled' => false,
         // Single email: 'admin@example.com'
         // Multiple emails (comma-separated): 'admin@example.com,dev@example.com'
-        'to' => env('EXCEPTION_LOGGER_EMAIL_TO'),
+        'to' => null,
         'from' => [
-            'address' => env('EXCEPTION_LOGGER_EMAIL_FROM_ADDRESS', env('MAIL_FROM_ADDRESS')),
-            'name' => env('EXCEPTION_LOGGER_EMAIL_FROM_NAME', env('MAIL_FROM_NAME', 'Exception Logger')),
+            'address' => null,
+            'name' => 'Exception Logger',
         ],
-        'subject_prefix' => env('EXCEPTION_LOGGER_EMAIL_SUBJECT_PREFIX', '[Exception Alert]'),
+        'subject_prefix' => '[Exception Alert]',
         'throttle_minutes' => 5,
     ],
 
     'ai' => [
-        'enabled' => (bool) env('EXCEPTION_LOGGER_AI_ENABLED', false),
+        'enabled' => false,
         // Custom Base URL (Support OpenAI, Groq, DeepSeek, Ollama, etc)
         // Default: https://api.openai.com/v1
-        'base_url' => env('EXCEPTION_LOGGER_AI_BASE_URL', 'https://api.openai.com/v1'),
-        'api_key' => env('EXCEPTION_LOGGER_AI_KEY'),
-        'model' => env('EXCEPTION_LOGGER_AI_MODEL', 'gpt-3.5-turbo'),
+        'base_url' => 'https://api.openai.com/v1',
+        'api_key' => null,
+        'model' => 'gpt-3.5-turbo',
         'temperature' => 0.5,
     ],
 

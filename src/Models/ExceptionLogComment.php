@@ -10,10 +10,39 @@ class ExceptionLogComment extends Model
 {
     protected $table = 'exception_log_comments';
 
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var list<string>
+     */
     protected $fillable = [
         'content',
         'user_id',
     ];
+
+    /**
+     * The attributes that should be cast.
+     *
+     * @var array<string, string>
+     */
+    protected $casts = [
+        'content' => 'string',
+        'user_id' => 'integer',
+    ];
+
+    /**
+     * The comment content.
+     *
+     * @var string
+     */
+    public $content;
+
+    /**
+     * The user ID who created the comment.
+     *
+     * @var int|null
+     */
+    public $user_id;
 
     public function exceptionLog(): BelongsTo
     {

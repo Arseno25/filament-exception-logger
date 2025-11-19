@@ -12,7 +12,7 @@ enum ExceptionLogStatus: string implements HasColor, HasLabel
     case Resolved = 'resolved';
     case Ignored = 'ignored';
 
-    public function getLabel(): ?string
+    public function getLabel(): string
     {
         return match ($this) {
             self::New => 'New',
@@ -22,7 +22,7 @@ enum ExceptionLogStatus: string implements HasColor, HasLabel
         };
     }
 
-    public function getColor(): string|array|null
+    public function getColor(): string
     {
         return match ($this) {
             self::New => 'danger',

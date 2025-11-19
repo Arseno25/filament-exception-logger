@@ -19,7 +19,10 @@ class CodeSnippet extends Component
         $snippet = $this->record->getSnippet(10);
         $extension = $this->record->getFileExtension();
 
-        return view('exception-logger::code-snippet', [
+        /** @var view-string $view */
+        $view = 'exception-logger::code-snippet';
+
+        return view($view, [
             'snippet' => $snippet,
             'extension' => $extension,
         ]);

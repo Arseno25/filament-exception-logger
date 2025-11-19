@@ -437,7 +437,8 @@ class DatabaseLoggerHandler extends AbstractProcessingHandler
             'EMERGENCY' => 7,
         ];
 
-        $currentLevelValue = $levelHierarchy[$currentLevel] ?? 4; // Default ERROR
+        $levelKey = strtoupper($currentLevel);
+        $currentLevelValue = $levelHierarchy[$levelKey];
 
         // If exception exists, analyze to determine level
         if ($exception instanceof \Throwable) {
@@ -495,13 +496,14 @@ class DatabaseLoggerHandler extends AbstractProcessingHandler
             // If level is determined, compare with current level
             // Use the higher level
             if ($determinedLevel) {
-                $determinedLevelValue = $levelHierarchy[$determinedLevel] ?? 4;
+                $determinedLevelKey = strtoupper($determinedLevel);
+                $determinedLevelValue = $levelHierarchy[$determinedLevelKey];
 
-                return $determinedLevelValue > $currentLevelValue ? $determinedLevel : $currentLevel;
+                return $determinedLevelValue > $currentLevelValue ? $determinedLevelKey : $levelKey;
             }
         }
 
         // Use level from record if no matching criteria
-        return $currentLevel;
+        return $levelKey;
     }
 }
