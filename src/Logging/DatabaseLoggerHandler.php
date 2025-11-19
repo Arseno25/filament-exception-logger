@@ -513,6 +513,7 @@ class DatabaseLoggerHandler extends AbstractProcessingHandler
                 $determinedLevelValue = $levelHierarchy[$determinedLevelKey];
 
                 $selectedLevelKey = $determinedLevelValue > $currentLevelValue ? $determinedLevelKey : $levelKey;
+
                 return $levelDisplayMap[$selectedLevelKey];
             }
         }
