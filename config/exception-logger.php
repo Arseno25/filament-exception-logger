@@ -3,7 +3,7 @@
 // config for Arseno25/ExceptionLogger
 return [
     'comments' => [
-        'enabled' => (bool) env('EXCEPTION_LOGGER_COMMENTS_ENABLED', false),
+        'enabled' => (bool) env('EXCEPTION_LOGGER_COMMENTS_ENABLED', true),
     ],
 
     'pruning' => [

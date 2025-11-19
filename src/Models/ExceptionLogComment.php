@@ -25,4 +25,3 @@ class ExceptionLogComment extends Model
         return $this->belongsTo(UserModelResolver::resolve());
     }
 }
-

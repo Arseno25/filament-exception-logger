@@ -37,5 +37,3 @@ class ExceptionLogMentioned extends Notification implements ShouldQueue
         ];
     }
 }
-
-
