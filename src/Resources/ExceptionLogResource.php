@@ -4,6 +4,7 @@ namespace Arseno25\ExceptionLogger\Resources;
 
 use Arseno25\ExceptionLogger\Enums\ExceptionLogStatus;
 use Arseno25\ExceptionLogger\Models\ExceptionLog;
+use Arseno25\ExceptionLogger\Resources\ExceptionLogResource\RelationManagers\CommentsRelationManager;
 use Arseno25\ExceptionLogger\Resources\Pages\ListExceptionLogs;
 use Arseno25\ExceptionLogger\Resources\Pages\ViewExceptionLog;
 use Filament\Actions\ViewAction;
@@ -141,6 +142,17 @@ class ExceptionLogResource extends Resource
                     ->collapsed(false)
                     ->columnSpan(1),
             ]);
+    }
+
+    public static function getRelations(): array
+    {
+        if (! config('exception-logger.comments.enabled', true)) {
+            return [];
+        }
+
+        return [
+            CommentsRelationManager::class,
+        ];
     }
 
     public static function getPages(): array

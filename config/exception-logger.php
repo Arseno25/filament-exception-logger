@@ -2,10 +2,14 @@
 
 // config for Arseno25/ExceptionLogger
 return [
-    'pruning' => [
-        'enabled' => true,
-        'retention_days' => 30,
-    ],
+'comments' => [
+    'enabled' => (bool) env('EXCEPTION_LOGGER_COMMENTS_ENABLED', true),
+],
+
+'pruning' => [
+    'enabled' => true,
+    'retention_days' => 30,
+],
 
     'telegram' => [
         'enabled' => env('EXCEPTION_LOGGER_TELEGRAM_ENABLED', false),

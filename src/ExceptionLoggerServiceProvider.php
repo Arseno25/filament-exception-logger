@@ -25,6 +25,7 @@ class ExceptionLoggerServiceProvider extends PackageServiceProvider
             ->hasConfigFile()
             ->hasViews()
             ->hasMigration('create_exception_logger_table')
+            ->hasMigration('create_exception_log_comments_table')
             ->hasCommand(ExceptionLoggerCommand::class);
     }
 

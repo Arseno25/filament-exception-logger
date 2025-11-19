@@ -3,6 +3,7 @@
 namespace Arseno25\ExceptionLogger\Resources\Pages;
 
 use Arseno25\ExceptionLogger\Resources\ExceptionLogResource;
+use Arseno25\ExceptionLogger\Resources\ExceptionLogResource\RelationManagers\CommentsRelationManager;
 use Filament\Actions\Action;
 use Filament\Resources\Pages\ViewRecord;
 use Illuminate\Support\Facades\Http;
@@ -81,6 +82,17 @@ class ViewExceptionLog extends ViewRecord
                         ]);
                     }
                 }),
+        ];
+    }
+
+    public function getRelationManagers(): array
+    {
+        if (! config('exception-logger.comments.enabled', true)) {
+            return [];
+        }
+
+        return [
+            CommentsRelationManager::class,
         ];
     }
 }

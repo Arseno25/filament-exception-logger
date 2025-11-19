@@ -6,6 +6,7 @@ use Arseno25\ExceptionLogger\Enums\ExceptionLogStatus;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Prunable;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class ExceptionLog extends Model
 {
@@ -25,6 +26,12 @@ class ExceptionLog extends Model
         $days = config('exception-logger.pruning.retention_days', 30);
 
         return static::where('created_at', '<=', now()->subDays($days));
+    }
+
+    public function comments(): HasMany
+    {
+        return $this->hasMany(ExceptionLogComment::class, 'exception_log_id')
+            ->latest();
     }
 
     /**
