@@ -41,7 +41,7 @@ class ViewExceptionLog extends ViewRecord
                     $endpoint = "$baseUrl/chat/completions";
                     $contextSnippet = json_encode(array_slice($record->context ?? [], 0, 2));
 
-                    $prompt = "Act as a Senior Laravel Developer. Analyze this exception:\n".
+                $prompt = "Act as a Senior Laravel Developer with 10 years of experience and expert in Laravel, PHP, and Laravel Filament. Analyze this exception:\n" .
                         "Message: {$record->message}\n".
                         "File: {$record->file}:{$record->line}\n".
                         "Context: {$contextSnippet}\n\n".

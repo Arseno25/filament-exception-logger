@@ -6,8 +6,9 @@ This plugin provides:
 
 - A dedicated `ExceptionLog` model and resource to browse your errors.
 - A dashboard widget to visualize exceptions over time.
-- Optional Telegram notifications.
-- Optional “Ask AI Solution” action to analyze an exception using an AI provider.
+- **Automatic critical exception detection** - Automatically classifies exceptions as CRITICAL based on exception type, keywords, or HTTP status codes.
+- **Multi-channel notifications** - Send alerts via Telegram, Slack, Discord, or Email.
+- Optional "Ask AI Solution" action to analyze an exception using an AI provider.
 
 ---
 
@@ -72,7 +73,46 @@ Then add the channel to your default `stack` so it is used automatically:
 ],
 ```
 
-From now on, any error sent to Laravel’s logger will be stored in the `exception_logger_table` table.
+From now on, any error sent to Laravel's logger will be stored in the `exception_logger_table` table.
+
+---
+
+## Critical Exception Detection
+
+The package automatically detects and classifies critical exceptions based on configurable criteria. Exceptions are automatically marked as **CRITICAL** if they match any of the following:
+
+1. **Exception class** - Matches a configured critical exception class
+2. **Message keywords** - Contains critical keywords in the exception message
+3. **HTTP status code** - HTTP exceptions with status code >= 500
+
+Configure critical detection in `config/exception-logger.php`:
+
+```php
+'critical' => [
+    // List of exception classes considered CRITICAL
+    'exceptions' => [
+        \Illuminate\Database\QueryException::class,
+        \PDOException::class,
+        \Symfony\Component\HttpKernel\Exception\HttpException::class,
+        \Illuminate\Http\Exceptions\ThrottleRequestsException::class,
+    ],
+
+    // Keywords in exception message that indicate CRITICAL
+    'keywords' => [
+        'database',
+        'connection',
+        'timeout',
+        'memory',
+        'fatal',
+        'segmentation',
+        'out of memory',
+    ],
+],
+```
+
+The system uses a level hierarchy to ensure the highest severity level is used:
+
+- `DEBUG` < `INFO` < `NOTICE` < `WARNING` < `ERROR` < `CRITICAL` < `ALERT` < `EMERGENCY`
 
 ---
 
@@ -160,11 +200,13 @@ If AI is disabled or misconfigured, the action will gracefully show an error mes
 
 ---
 
-## Telegram notifications (optional)
+## Notifications (optional)
 
-You may send a summarized exception notification to a Telegram chat whenever an error is logged.
+You can configure multiple notification channels to receive alerts when exceptions occur. All channels support throttling to prevent spam.
 
-Configure Telegram in `config/exception-logger.php`:
+### Telegram
+
+Send notifications to a Telegram chat:
 
 ```php
 'telegram' => [
@@ -175,15 +217,80 @@ Configure Telegram in `config/exception-logger.php`:
 ],
 ```
 
-And in your `.env`:
-
 ```env
 EXCEPTION_LOGGER_TELEGRAM_ENABLED=true
 TELEGRAM_BOT_TOKEN=xxxx:yyyy
 TELEGRAM_CHAT_ID=123456789
 ```
 
-The handler uses a cache-based throttle (`throttle_minutes`) to avoid spamming the same message repeatedly.
+### Slack
+
+Send notifications to a Slack channel via webhook:
+
+```php
+'slack' => [
+    'enabled' => env('EXCEPTION_LOGGER_SLACK_ENABLED', false),
+    'webhook_url' => env('EXCEPTION_LOGGER_SLACK_WEBHOOK_URL'),
+    'channel' => env('EXCEPTION_LOGGER_SLACK_CHANNEL', '#exceptions'),
+    'username' => env('EXCEPTION_LOGGER_SLACK_USERNAME', 'Exception Logger'),
+    'throttle_minutes' => 5,
+],
+```
+
+```env
+EXCEPTION_LOGGER_SLACK_ENABLED=true
+EXCEPTION_LOGGER_SLACK_WEBHOOK_URL=https://hooks.slack.com/services/YOUR/WEBHOOK/URL
+EXCEPTION_LOGGER_SLACK_CHANNEL=#exceptions
+EXCEPTION_LOGGER_SLACK_USERNAME=Exception Logger
+```
+
+### Discord
+
+Send notifications to a Discord channel via webhook:
+
+```php
+'discord' => [
+    'enabled' => env('EXCEPTION_LOGGER_DISCORD_ENABLED', false),
+    'webhook_url' => env('EXCEPTION_LOGGER_DISCORD_WEBHOOK_URL'),
+    'username' => env('EXCEPTION_LOGGER_DISCORD_USERNAME', 'Exception Logger'),
+    'throttle_minutes' => 5,
+],
+```
+
+```env
+EXCEPTION_LOGGER_DISCORD_ENABLED=true
+EXCEPTION_LOGGER_DISCORD_WEBHOOK_URL=https://discord.com/api/webhooks/YOUR/WEBHOOK/URL
+EXCEPTION_LOGGER_DISCORD_USERNAME=Exception Logger
+```
+
+### Email
+
+Send notifications via email (supports multiple recipients):
+
+```php
+'email' => [
+    'enabled' => env('EXCEPTION_LOGGER_EMAIL_ENABLED', false),
+    'to' => env('EXCEPTION_LOGGER_EMAIL_TO'),
+    'from' => [
+        'address' => env('EXCEPTION_LOGGER_EMAIL_FROM_ADDRESS', env('MAIL_FROM_ADDRESS')),
+        'name' => env('EXCEPTION_LOGGER_EMAIL_FROM_NAME', env('MAIL_FROM_NAME', 'Exception Logger')),
+    ],
+    'subject_prefix' => env('EXCEPTION_LOGGER_EMAIL_SUBJECT_PREFIX', '[Exception Alert]'),
+    'throttle_minutes' => 5,
+],
+```
+
+```env
+EXCEPTION_LOGGER_EMAIL_ENABLED=true
+EXCEPTION_LOGGER_EMAIL_TO=admin@example.com,dev@example.com
+EXCEPTION_LOGGER_EMAIL_FROM_ADDRESS=noreply@example.com
+EXCEPTION_LOGGER_EMAIL_FROM_NAME=Exception Logger
+EXCEPTION_LOGGER_EMAIL_SUBJECT_PREFIX=[Exception Alert]
+```
+
+**Note:** For email, you can specify multiple recipients by separating them with commas, or use an array in the config file.
+
+All notification channels use cache-based throttling (`throttle_minutes`) to avoid spamming the same message repeatedly. Each channel has independent throttling, so you can enable multiple channels simultaneously.
 
 ---
 

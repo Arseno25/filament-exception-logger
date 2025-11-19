@@ -26,4 +26,60 @@ class ExceptionLog extends Model
 
         return static::where('created_at', '<=', now()->subDays($days));
     }
+
+    /**
+     * Get code snippet around the error line
+     *
+     * @param int $contextLines Number of lines before and after the error line
+     * @return array|null Returns array with 'lines', 'startLine', 'errorLine' or null if file doesn't exist
+     */
+    public function getSnippet(int $contextLines = 10): ?array
+    {
+        if (!$this->file || !$this->line || !file_exists($this->file)) {
+            return null;
+        }
+
+        try {
+            $file = new \SplFileObject($this->file);
+            $errorLine = (int) $this->line;
+            $startLine = max(1, $errorLine - $contextLines);
+            $endLine = $errorLine + $contextLines;
+
+            $lines = [];
+            $currentLine = 1;
+
+            // Read file line by line
+            while (!$file->eof() && $currentLine <= $endLine) {
+                $line = $file->current();
+
+                if ($currentLine >= $startLine) {
+                    $lines[$currentLine] = rtrim($line, "\r\n");
+                }
+
+                $file->next();
+                $currentLine++;
+            }
+
+            return [
+                'lines' => $lines,
+                'startLine' => $startLine,
+                'errorLine' => $errorLine,
+                'file' => $this->file,
+            ];
+        } catch (\Exception $e) {
+            return null;
+        }
+    }
+
+    /**
+     * Get file extension for syntax highlighting
+     */
+    public function getFileExtension(): ?string
+    {
+        if (!$this->file) {
+            return null;
+        }
+
+        return pathinfo($this->file, PATHINFO_EXTENSION);
+    }
 }

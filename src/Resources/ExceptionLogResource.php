@@ -2,18 +2,19 @@
 
 namespace Arseno25\ExceptionLogger\Resources;
 
-use Arseno25\ExceptionLogger\Enums\ExceptionLogStatus;
-use Arseno25\ExceptionLogger\Models\ExceptionLog;
-use Arseno25\ExceptionLogger\Resources\Pages\ListExceptionLogs;
-use Arseno25\ExceptionLogger\Resources\Pages\ViewExceptionLog;
-use Filament\Actions\ViewAction;
-use Filament\Infolists\Components\TextEntry;
-use Filament\Resources\Resource;
-use Filament\Schemas\Components\Section;
-use Filament\Support\Icons\Heroicon;
 use Filament\Tables;
 use Filament\Tables\Table;
+use Filament\Actions\ViewAction;
+use Filament\Resources\Resource;
+use Filament\Support\Icons\Heroicon;
+use Filament\Schemas\Components\Section;
+use Filament\Infolists\Components\TextEntry;
+use Filament\Infolists\Components\ViewEntry;
+use Arseno25\ExceptionLogger\Models\ExceptionLog;
+use Arseno25\ExceptionLogger\Enums\ExceptionLogStatus;
 use Novadaemon\FilamentPrettyJson\Infolist\PrettyJsonEntry;
+use Arseno25\ExceptionLogger\Resources\Pages\ViewExceptionLog;
+use Arseno25\ExceptionLogger\Resources\Pages\ListExceptionLogs;
 
 class ExceptionLogResource extends Resource
 {
@@ -88,14 +89,17 @@ class ExceptionLogResource extends Resource
     public static function infolist(\Filament\Schemas\Schema $schema): \Filament\Schemas\Schema
     {
         return $schema
+            ->columns(2)
             ->schema([
-                Section::make('Overview')
-                    ->schema([
-                        TextEntry::make('level')->badge(),
-                        TextEntry::make('created_at')->dateTime(),
-                        TextEntry::make('method')->weight('bold'),
-                        TextEntry::make('ip')->label('IP Address'),
-                        TextEntry::make('url')->columnSpanFull()->url(fn ($record) => $record->url, true),
+                Section::make()
+                ->schema([
+                    Section::make('Overview')
+                        ->schema([
+                            TextEntry::make('level')->badge(),
+                            TextEntry::make('created_at')->dateTime(),
+                            TextEntry::make('method')->weight('bold'),
+                            TextEntry::make('ip')->label('IP Address'),
+                        TextEntry::make('url')->columnSpanFull()->url(fn($record) => $record->url, true),
                     ])->columns(4),
 
                 Section::make('Error Detail')
@@ -105,9 +109,9 @@ class ExceptionLogResource extends Resource
                             ->fontFamily('mono')
                             ->columnSpanFull(),
 
-                        TextEntry::make('file')
-                            ->fontFamily('mono')
-                            ->label('File Path'),
+                    TextEntry::make('file')
+                        ->fontFamily('mono')
+                        ->label('File Path'),
 
                         TextEntry::make('line')
                             ->label('Line Number'),
@@ -116,12 +120,26 @@ class ExceptionLogResource extends Resource
                 Section::make('Context Payload')
                     ->schema([
                         PrettyJsonEntry::make('context')
-                            ->hidden(fn ($record) => empty($record->context)),
+                        ->hidden(fn($record) => empty($record->context)),
 
                         TextEntry::make('user_agent')
                             ->label('User Agent'),
                     ])
                     ->collapsible(),
+                ])
+                ->columnSpan(1)
+                ->extraAttributes(['class' => 'space-y-6']),
+
+            Section::make('Source Code Preview')
+                ->schema([
+                    ViewEntry::make('code_snippet')
+                        ->view('exception-logger::code-snippet-wrapper')
+                        ->columnSpanFull()
+                        ->hidden(fn($record) => !$record->file || !$record->line || !file_exists($record->file)),
+                ])
+                ->collapsible()
+                ->collapsed(false)
+                ->columnSpan(1),
             ]);
     }
 
