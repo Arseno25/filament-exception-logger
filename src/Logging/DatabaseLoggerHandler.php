@@ -437,6 +437,18 @@ class DatabaseLoggerHandler extends AbstractProcessingHandler
             'EMERGENCY' => 7,
         ];
 
+        // Map uppercase levels to display format (title case)
+        $levelDisplayMap = [
+            'DEBUG' => 'Debug',
+            'INFO' => 'Info',
+            'NOTICE' => 'Notice',
+            'WARNING' => 'Warning',
+            'ERROR' => 'Error',
+            'CRITICAL' => 'Critical',
+            'ALERT' => 'Alert',
+            'EMERGENCY' => 'Emergency',
+        ];
+
         $levelKey = strtoupper($currentLevel);
         $currentLevelValue = $levelHierarchy[$levelKey];
 
@@ -499,11 +511,12 @@ class DatabaseLoggerHandler extends AbstractProcessingHandler
                 $determinedLevelKey = strtoupper($determinedLevel);
                 $determinedLevelValue = $levelHierarchy[$determinedLevelKey];
 
-                return $determinedLevelValue > $currentLevelValue ? $determinedLevelKey : $levelKey;
+                $selectedLevelKey = $determinedLevelValue > $currentLevelValue ? $determinedLevelKey : $levelKey;
+                return $levelDisplayMap[$selectedLevelKey];
             }
         }
 
         // Use level from record if no matching criteria
-        return $levelKey;
+        return $levelDisplayMap[$levelKey];
     }
 }
