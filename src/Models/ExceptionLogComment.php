@@ -24,4 +24,3 @@ class ExceptionLogComment extends Model
         return $this->belongsTo(config('auth.providers.users.model', \App\Models\User::class));
     }
 }
-
