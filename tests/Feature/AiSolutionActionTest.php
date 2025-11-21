@@ -14,7 +14,7 @@ it('returns error view when AI is disabled or api key missing', function () {
     ]);
 
     // Create a simple ExceptionLog-like object
-    $record = new \stdClass();
+    $record = new \stdClass;
     $record->level = 'ERROR';
     $record->message = 'Test message';
     $record->context = [];
@@ -37,34 +37,42 @@ it('returns error view when AI is disabled or api key missing', function () {
         public function getRecord(): \Illuminate\Database\Eloquent\Model
         {
             // Create a mock ExceptionLog model without database operations
-            $model = new class extends ExceptionLog {
+            $model = new class extends ExceptionLog
+            {
                 protected $attributes = [];
 
-                public function __construct() {
+                public function __construct()
+                {
                     // Don't call parent constructor to avoid database operations
                 }
 
-                public function __get($key) {
+                public function __get($key)
+                {
                     return $this->attributes[$key] ?? null;
                 }
 
-                public function __set($key, $value) {
+                public function __set($key, $value)
+                {
                     $this->attributes[$key] = $value;
                 }
 
-                public function __isset($key) {
+                public function __isset($key)
+                {
                     return isset($this->attributes[$key]);
                 }
 
-                public function save(array $options = []) {
+                public function save(array $options = [])
+                {
                     return true; // Mock save
                 }
 
-                public function delete() {
+                public function delete()
+                {
                     return true; // Mock delete
                 }
 
-                public function toArray() {
+                public function toArray()
+                {
                     return $this->attributes;
                 }
             };
@@ -103,7 +111,7 @@ it('returns content when AI call succeeds', function () {
     ]);
 
     // Create a simple ExceptionLog-like object
-    $record = new \stdClass();
+    $record = new \stdClass;
     $record->level = 'ERROR';
     $record->message = 'Test message';
     $record->context = [];
@@ -126,34 +134,42 @@ it('returns content when AI call succeeds', function () {
         public function getRecord(): \Illuminate\Database\Eloquent\Model
         {
             // Create a mock ExceptionLog model without database operations
-            $model = new class extends ExceptionLog {
+            $model = new class extends ExceptionLog
+            {
                 protected $attributes = [];
 
-                public function __construct() {
+                public function __construct()
+                {
                     // Don't call parent constructor to avoid database operations
                 }
 
-                public function __get($key) {
+                public function __get($key)
+                {
                     return $this->attributes[$key] ?? null;
                 }
 
-                public function __set($key, $value) {
+                public function __set($key, $value)
+                {
                     $this->attributes[$key] = $value;
                 }
 
-                public function __isset($key) {
+                public function __isset($key)
+                {
                     return isset($this->attributes[$key]);
                 }
 
-                public function save(array $options = []) {
+                public function save(array $options = [])
+                {
                     return true; // Mock save
                 }
 
-                public function delete() {
+                public function delete()
+                {
                     return true; // Mock delete
                 }
 
-                public function toArray() {
+                public function toArray()
+                {
                     return $this->attributes;
                 }
             };

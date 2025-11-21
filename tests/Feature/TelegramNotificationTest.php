@@ -1,6 +1,5 @@
 <?php
 
-use Arseno25\ExceptionLogger\Logging\DatabaseLoggerHandler;
 use Arseno25\ExceptionLogger\Tests\Support\MockDatabaseLoggerHandler;
 use Illuminate\Log\Logger;
 use Illuminate\Support\Facades\Cache;
