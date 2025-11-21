@@ -1,6 +1,5 @@
 <?php
 
-use Arseno25\ExceptionLogger\Models\ExceptionLog;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\DB;
 
@@ -47,7 +46,7 @@ it('prunes old logs based on retention_days', function () {
 
     // Verify remaining records using raw query
     $remainingLogs = DB::select('SELECT message FROM exception_logger_table ORDER BY created_at');
-    $messages = array_map(fn($log) => $log->message, $remainingLogs);
+    $messages = array_map(fn ($log) => $log->message, $remainingLogs);
 
     expect($messages)->toBe(['Recent error']);
 });
