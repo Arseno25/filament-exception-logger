@@ -78,6 +78,17 @@ use Arseno25\ExceptionLogger\ExceptionLoggerPlugin;
 ])
 ```
 
+This will automatically register:
+- **Exception Logs** resource page for managing exceptions
+- **Exception Stats Overview** widget showing 7-day error trends
+
+### 6. Access Exception Management
+
+After installation:
+1. Navigate to **Exception Logs** in your Filament admin panel
+2. View the **Exception Stats Overview** widget on your dashboard
+3. Configure widget permissions and visibility as needed
+
 ## 🚨 Critical Exception Detection
 
 Automatically detects critical exceptions based on:
@@ -197,6 +208,69 @@ EXCEPTION_LOGGER_AI_API_KEY=sk-your-api-key
 EXCEPTION_LOGGER_AI_MODEL=gpt-3.5-turbo
 ```
 
+## 📊 Custom Widget Usage
+
+### Adding Widget to Custom Dashboard
+
+If you want to add the exception stats widget to a specific Filament dashboard:
+
+```php
+use Arseno25\ExceptionLogger\Widgets\ExceptionStatsOverview;
+
+class MyCustomDashboard extends Filament\Pages\Dashboard
+{
+    protected function getHeaderWidgets(): array
+    {
+        return [
+            ExceptionStatsOverview::class,
+        ];
+    }
+}
+```
+
+### Creating Custom Exception Widget
+
+You can extend the base widget for custom functionality:
+
+```php
+<?php
+
+namespace App\Filament\Widgets;
+
+use Arseno25\ExceptionLogger\Widgets\ExceptionStatsOverview;
+use Flowframe\Trend\Trend;
+
+class CustomExceptionWidget extends ExceptionStatsOverview
+{
+    protected ?string $heading = 'Custom Error Analytics';
+
+    protected function getData(): array
+    {
+        // Custom data logic - last 30 days instead of 7
+        $data = Trend::model(ExceptionLog::class)
+            ->between(
+                start: now()->subDays(30),
+                end: now(),
+            )
+            ->perDay()
+            ->count();
+
+        return [
+            'datasets' => [
+                [
+                    'label' => 'Exceptions (30 Days)',
+                    'data' => $data->map(fn (TrendValue $value) => $value->aggregate),
+                    'borderColor' => '#8b5cf6', // Purple
+                    'backgroundColor' => '#ede9fe',
+                    'fill' => true,
+                ],
+            ],
+            'labels' => $data->map(fn (TrendValue $value) => $value->date),
+        ];
+    }
+}
+```
+
 ## 🗂️ Log Pruning
 
 Configure automatic log cleanup:
@@ -221,12 +295,12 @@ protected function schedule(Schedule $schedule): void
 
 Once installed:
 
-1. Navigate to **Exception Logs** in your Filament panel
-2. View detailed exception information with syntax highlighting
-3. Update exception status (New, In Progress, Resolved, Ignored)
-4. Use **"Ask AI Solution"** for intelligent error analysis
-5. Add comments and mention team members for collaboration
-6. View exception trends in the dashboard widget
+1. **Exception Logs Page**: Navigate to **Exception Logs** in your Filament panel to manage all exceptions
+2. **Dashboard Widget**: View real-time exception trends in the **Exception Stats Overview** widget
+3. **Exception Management**: Update exception status (New, In Progress, Resolved, Ignored)
+4. **AI Analysis**: Use **"Ask AI Solution"** for intelligent error analysis
+5. **Collaboration**: Add comments and mention team members for collaboration
+6. **Custom Widgets**: Create custom exception widgets for specific dashboards (see examples above)
 
 ## 🤝 Contributing
 
