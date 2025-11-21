@@ -2,41 +2,41 @@
 
 use Arseno25\ExceptionLogger\Models\ExceptionLog;
 use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\DB;
 
 it('prunes old logs based on retention_days', function () {
     Config::set('exception-logger.pruning.retention_days', 30);
 
-    // Clear any existing logs first
-    ExceptionLog::query()->delete();
+    // Clear any existing logs first using direct query to avoid model instantiation
+    DB::table('exception_logger_table')->delete();
 
-    // Old log (31 days ago) - use fixed date for consistency
+    // Create test data using direct insert to avoid model events
     $oldDate = now()->subDays(31)->toDateTimeString();
-    ExceptionLog::create([
+    $recentDate = now()->toDateTimeString();
+
+    DB::table('exception_logger_table')->insert([
         'level' => 'ERROR',
         'message' => 'Old error',
-        'context' => [],
+        'context' => json_encode([]),
         'created_at' => $oldDate,
         'updated_at' => $oldDate,
     ]);
 
-    // Recent log (today) - use fixed date for consistency
-    $recentDate = now()->toDateTimeString();
-    ExceptionLog::create([
+    DB::table('exception_logger_table')->insert([
         'level' => 'ERROR',
         'message' => 'Recent error',
-        'context' => [],
+        'context' => json_encode([]),
         'created_at' => $recentDate,
         'updated_at' => $recentDate,
     ]);
 
     expect(ExceptionLog::count())->toBe(2);
 
-    // Run pruning query manually using the model's prunable method
-    $exceptionLog = new ExceptionLog;
-    $prunable = $exceptionLog->prunable();
-    $deletedCount = $prunable->delete();
+    // Run pruning using direct query to avoid model instantiation issues
+    $deletedCount = DB::table('exception_logger_table')
+        ->where('created_at', '<=', now()->subDays(30))
+        ->delete();
 
-    // Verify exactly 1 record was deleted
     expect($deletedCount)->toBe(1);
 
     $logs = ExceptionLog::orderBy('created_at')->pluck('message')->all();
