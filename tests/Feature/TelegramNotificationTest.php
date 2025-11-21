@@ -1,6 +1,7 @@
 <?php
 
 use Arseno25\ExceptionLogger\Logging\DatabaseLoggerHandler;
+use Arseno25\ExceptionLogger\Tests\Support\MockDatabaseLoggerHandler;
 use Illuminate\Log\Logger;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Config;
@@ -13,7 +14,7 @@ it('does not send telegram notification when disabled', function () {
     Http::fake(); // should not be called
 
     $monolog = new MonologLogger('test');
-    $monolog->pushHandler(new DatabaseLoggerHandler);
+    $monolog->pushHandler(new MockDatabaseLoggerHandler);
     $logger = new Logger($monolog);
 
     $logger->error('Telegram disabled message', []);
@@ -34,7 +35,7 @@ it('sends telegram notification when enabled and not throttled', function () {
     ]);
 
     $monolog = new MonologLogger('test');
-    $monolog->pushHandler(new DatabaseLoggerHandler);
+    $monolog->pushHandler(new MockDatabaseLoggerHandler);
     $logger = new Logger($monolog);
 
     $logger->error('Telegram message', []);
@@ -58,7 +59,7 @@ it('throttles duplicate telegram notifications', function () {
     ]);
 
     $monolog = new MonologLogger('test');
-    $monolog->pushHandler(new DatabaseLoggerHandler);
+    $monolog->pushHandler(new MockDatabaseLoggerHandler);
     $logger = new Logger($monolog);
 
     $logger->error('Same telegram message', []);

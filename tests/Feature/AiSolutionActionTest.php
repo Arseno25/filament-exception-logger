@@ -13,15 +13,17 @@ it('returns error view when AI is disabled or api key missing', function () {
         'model' => 'gpt-4.1-mini',
     ]);
 
-    $record = ExceptionLog::create([
-        'level' => 'ERROR',
-        'message' => 'Test message',
-        'context' => [],
-        'method' => 'GET',
-        'url' => 'http://localhost/test',
-        'ip' => '127.0.0.1',
-        'user_agent' => 'phpunit',
-    ]);
+    // Create a simple ExceptionLog-like object
+    $record = new \stdClass();
+    $record->level = 'ERROR';
+    $record->message = 'Test message';
+    $record->context = [];
+    $record->method = 'GET';
+    $record->url = 'http://localhost/test';
+    $record->ip = '127.0.0.1';
+    $record->user_agent = 'phpunit';
+    $record->created_at = now();
+    $record->updated_at = now();
 
     $page = new class($record) extends ViewExceptionLog
     {
@@ -34,7 +36,45 @@ it('returns error view when AI is disabled or api key missing', function () {
 
         public function getRecord(): \Illuminate\Database\Eloquent\Model
         {
-            return $this->testRecord;
+            // Create a mock ExceptionLog model without database operations
+            $model = new class extends ExceptionLog {
+                protected $attributes = [];
+
+                public function __construct() {
+                    // Don't call parent constructor to avoid database operations
+                }
+
+                public function __get($key) {
+                    return $this->attributes[$key] ?? null;
+                }
+
+                public function __set($key, $value) {
+                    $this->attributes[$key] = $value;
+                }
+
+                public function __isset($key) {
+                    return isset($this->attributes[$key]);
+                }
+
+                public function save(array $options = []) {
+                    return true; // Mock save
+                }
+
+                public function delete() {
+                    return true; // Mock delete
+                }
+
+                public function toArray() {
+                    return $this->attributes;
+                }
+            };
+
+            // Set all properties from testRecord
+            foreach ($this->testRecord as $key => $value) {
+                $model->$key = $value;
+            }
+
+            return $model;
         }
     };
 
@@ -62,15 +102,17 @@ it('returns content when AI call succeeds', function () {
         ], 200),
     ]);
 
-    $record = ExceptionLog::create([
-        'level' => 'ERROR',
-        'message' => 'Test message',
-        'context' => [],
-        'method' => 'GET',
-        'url' => 'http://localhost/test',
-        'ip' => '127.0.0.1',
-        'user_agent' => 'phpunit',
-    ]);
+    // Create a simple ExceptionLog-like object
+    $record = new \stdClass();
+    $record->level = 'ERROR';
+    $record->message = 'Test message';
+    $record->context = [];
+    $record->method = 'GET';
+    $record->url = 'http://localhost/test';
+    $record->ip = '127.0.0.1';
+    $record->user_agent = 'phpunit';
+    $record->created_at = now();
+    $record->updated_at = now();
 
     $page = new class($record) extends ViewExceptionLog
     {
@@ -83,7 +125,45 @@ it('returns content when AI call succeeds', function () {
 
         public function getRecord(): \Illuminate\Database\Eloquent\Model
         {
-            return $this->testRecord;
+            // Create a mock ExceptionLog model without database operations
+            $model = new class extends ExceptionLog {
+                protected $attributes = [];
+
+                public function __construct() {
+                    // Don't call parent constructor to avoid database operations
+                }
+
+                public function __get($key) {
+                    return $this->attributes[$key] ?? null;
+                }
+
+                public function __set($key, $value) {
+                    $this->attributes[$key] = $value;
+                }
+
+                public function __isset($key) {
+                    return isset($this->attributes[$key]);
+                }
+
+                public function save(array $options = []) {
+                    return true; // Mock save
+                }
+
+                public function delete() {
+                    return true; // Mock delete
+                }
+
+                public function toArray() {
+                    return $this->attributes;
+                }
+            };
+
+            // Set all properties from testRecord
+            foreach ($this->testRecord as $key => $value) {
+                $model->$key = $value;
+            }
+
+            return $model;
         }
     };
 

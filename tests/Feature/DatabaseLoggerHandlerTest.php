@@ -1,7 +1,6 @@
 <?php
 
 use Arseno25\ExceptionLogger\Logging\DatabaseLoggerHandler;
-use Arseno25\ExceptionLogger\Models\ExceptionLog;
 use Illuminate\Log\Logger;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Config;
