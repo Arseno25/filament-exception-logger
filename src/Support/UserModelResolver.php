@@ -43,4 +43,3 @@ class UserModelResolver
         return \Illuminate\Foundation\Auth\User::class;
     }
 }
-
