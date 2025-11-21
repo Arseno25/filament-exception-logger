@@ -3,6 +3,13 @@
 use Arseno25\ExceptionLogger\ExceptionLoggerPlugin;
 use Arseno25\ExceptionLogger\Resources\ExceptionLogResource;
 
+beforeEach(function () {
+    // Clean up any potential error handler state before each test
+    if (function_exists('error_clear_last')) {
+        error_clear_last();
+    }
+});
+
 it('plugin can be instantiated', function () {
     $plugin = ExceptionLoggerPlugin::make();
 

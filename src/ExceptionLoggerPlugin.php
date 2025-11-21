@@ -32,6 +32,6 @@ class ExceptionLoggerPlugin implements Plugin
 
     public static function make(): static
     {
-        return app(static::class);
+        return new static();
     }
 }
