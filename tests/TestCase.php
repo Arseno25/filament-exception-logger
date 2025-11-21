@@ -18,6 +18,18 @@ class TestCase extends Orchestra
         );
     }
 
+    protected function tearDown(): void
+    {
+        parent::tearDown();
+
+        // Clean up any error handler state to prevent issues in CI
+        if (class_exists(\PHPUnit\Runner\ErrorHandler::class)) {
+            // Restore error handlers to prevent state issues between tests
+            restore_error_handler();
+            restore_exception_handler();
+        }
+    }
+
     protected function getPackageProviders($app)
     {
         return [
