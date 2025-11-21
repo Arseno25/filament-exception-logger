@@ -30,8 +30,8 @@ class ExceptionLoggerPlugin implements Plugin
         //
     }
 
-    public static function make(): self
+    public static function make(): static
     {
-        return new self();
+        return new static;
     }
 }
