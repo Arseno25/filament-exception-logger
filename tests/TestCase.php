@@ -4,7 +4,6 @@ namespace Arseno25\ExceptionLogger\Tests;
 
 use Arseno25\ExceptionLogger\ExceptionLoggerServiceProvider;
 use Illuminate\Database\Eloquent\Factories\Factory;
-use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\File;
 use Orchestra\Testbench\TestCase as Orchestra;
 
