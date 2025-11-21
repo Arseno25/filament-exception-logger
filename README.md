@@ -345,7 +345,7 @@ composer test
 
 Thanks to everyone who has contributed to making this package better:
 
-- [All Contributors](https://github.com/Arseno25/exception-logger/graphs/contributors)
+- [All Contributors](https://github.com/Arseno25/filament-exception-logger/graphs/contributors)
 
 ### Inspiration & References
 
