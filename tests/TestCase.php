@@ -54,17 +54,21 @@ class TestCase extends Orchestra
         while ($restoreCount < $maxRestores) {
             $restored = false;
 
-            if (set_error_handler(function() { return false; }) !== null) {
+            if (set_error_handler(function () {
+                return false;
+            }) !== null) {
                 restore_error_handler();
                 $restored = true;
             }
 
-            if (set_exception_handler(function() { return false; }) !== null) {
+            if (set_exception_handler(function () {
+                return false;
+            }) !== null) {
                 restore_exception_handler();
                 $restored = true;
             }
 
-            if (!$restored) {
+            if (! $restored) {
                 break;
             }
 
