@@ -32,7 +32,7 @@ it('prunes old logs based on retention_days', function () {
     expect(ExceptionLog::count())->toBe(2);
 
     // Run pruning query manually using the model's prunable method
-    $exceptionLog = new ExceptionLog();
+    $exceptionLog = new ExceptionLog;
     $prunable = $exceptionLog->prunable();
     $deletedCount = $prunable->delete();
 
