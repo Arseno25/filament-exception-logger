@@ -20,7 +20,7 @@
         "filament/filament": "~4.0",
         "flowframe/laravel-trend": "^0.4.0",
         "illuminate/contracts": "^11.0||^12.0",
-        "novadaemon/filament-pretty-json": "3.0",
+        "novadaemon/filament-pretty-json": "3.1.0",
         "spatie/laravel-package-tools": "^1.16"
     },
     "require-dev": {
